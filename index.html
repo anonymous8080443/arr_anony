@@ -1,171 +1,956 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
   <meta charset="utf-8">
-  <meta name="description"
-        content="LatentVLA: Enhancing Long-Horizon Vision-Language-Action Models with a Latent World Model">
+  <meta name="description" content="π^ε_RL: Improving Flow-Matching Vision-Language-Action Models via Reinforcement Learning in Latent Noise Chunk Space">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>LatentVLA Demo</title>
+  <title>π^ε_RL Project Page</title>
 
-  <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro"
-        rel="stylesheet">
-  <link rel="stylesheet" href="./static/css/bulma.min.css">
-  <link rel="stylesheet" href="./static/css/fontawesome.all.min.css">
-  <link rel="stylesheet"
-        href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
-  <link rel="stylesheet" href="./static/css/index.css">
-
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-  <script defer src="./static/js/fontawesome.all.min.js"></script>
+  <!-- Keep the page anonymous: do not add author names, institution logos, or non-anonymous repository links before review. -->
+  <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
 
   <style>
-    /* 视频容器样式：圆角、阴影、背景色 */
-    .video-container {
-      border-radius: 8px;
-      overflow: hidden;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-      background: #000; /* 黑色背景防止加载闪烁 */
-      margin-bottom: 10px;
-    }
-    
-    .video-container video {
-      width: 100%;
-      height: auto;
-      display: block;
-    }
-    
-    .video-caption {
-      background-color: #f5f5f5;
-      padding: 8px;
-      text-align: center;
-      font-size: 0.85rem;
-      font-weight: 600;
-      color: #4a4a4a;
+    :root {
+      --primary: #2563eb;
+      --primary-dark: #1e40af;
+      --accent: #7c3aed;
+      --success: #059669;
+      --warning: #d97706;
+      --soft-bg: #f7f9fc;
+      --card-border: #e8edf5;
+      --text-main: #111827;
+      --text-sub: #5b6472;
+      --text-light: #6b7280;
     }
 
-    /* 调整列间距 */
-    .columns {
-      margin-top: 10px;
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: "Google Sans", "Noto Sans", sans-serif;
+      color: var(--text-main);
+      background: #ffffff;
+    }
+
+    .navbar-custom {
+      border-bottom: 1px solid #eef2f7;
+      background: rgba(255,255,255,0.93);
+      backdrop-filter: blur(10px);
+      position: sticky;
+      top: 0;
+      z-index: 50;
+    }
+
+    .navbar-custom .navbar-item {
+      font-weight: 700;
+      color: #374151;
+    }
+
+    .navbar-custom .navbar-item:hover {
+      color: var(--primary-dark);
+      background: transparent;
+    }
+
+    .hero-gradient {
+      background:
+        radial-gradient(circle at top left, rgba(37,99,235,0.12), transparent 32%),
+        radial-gradient(circle at top right, rgba(124,58,237,0.12), transparent 30%),
+        linear-gradient(180deg, #f8fbff 0%, #ffffff 100%);
+    }
+
+    .publication-title {
+      letter-spacing: -0.035em;
+      line-height: 1.12;
+      max-width: 1120px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .method-symbol {
+      white-space: nowrap;
+      color: var(--primary-dark);
+      font-weight: 900;
+    }
+
+    .hero-subtitle {
+      font-size: 1.13rem;
+      color: var(--text-sub);
+      max-width: 1000px;
+      margin: 0 auto 1.25rem auto;
+      line-height: 1.75;
+    }
+
+    .badge-wrap {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: center;
+      margin: 1rem 0 1.55rem;
+    }
+
+    .metric-badge {
+      background: #eef4ff;
+      color: #1e40af;
+      border: 1px solid #dbeafe;
+      padding: 8px 14px;
+      border-radius: 999px;
+      font-size: 0.94rem;
+      font-weight: 800;
+    }
+
+    .metric-badge.green {
+      background: #ecfdf5;
+      color: #047857;
+      border-color: #d1fae5;
+    }
+
+    .metric-badge.purple {
+      background: #f5f3ff;
+      color: #6d28d9;
+      border-color: #ede9fe;
+    }
+
+    .publication-links .button {
+      margin: 0.25rem;
+      border-radius: 999px;
+      padding-left: 1.15rem;
+      padding-right: 1.15rem;
+      font-weight: 800;
+    }
+
+    .anchor-offset { scroll-margin-top: 76px; }
+
+    .section-title { margin-bottom: 0.65rem !important; }
+
+    .section-subtitle {
+      color: var(--text-sub);
+      font-size: 1.05rem;
+      line-height: 1.75;
+      max-width: 920px;
+      margin: 0 auto 2rem auto;
+      text-align: center;
+    }
+
+    .figure-card,
+    .info-card,
+    .result-card,
+    .video-card,
+    .curve-card,
+    .quote-card {
+      border: 1px solid var(--card-border);
+      border-radius: 18px;
+      background: #fff;
+      box-shadow: 0 10px 30px rgba(15, 23, 42, 0.045);
+    }
+
+    .figure-card { overflow: hidden; }
+
+    .figure-card img,
+    .curve-card img {
+      display: block;
+      width: 100%;
+      height: auto;
+      cursor: zoom-in;
+      background: #fff;
+    }
+
+    .figure-caption,
+    .curve-caption {
+      padding: 1rem 1.2rem 1.2rem;
+      color: var(--text-sub);
+      font-size: 0.97rem;
+      line-height: 1.7;
+    }
+
+    .soft-section { background: var(--soft-bg); }
+
+    .info-card {
+      height: 100%;
+      padding: 1.35rem 1.2rem;
+    }
+
+    .info-card .icon-wrap {
+      width: 48px;
+      height: 48px;
+      border-radius: 14px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: #eef4ff;
+      color: var(--primary-dark);
+      font-size: 1.25rem;
+      margin-bottom: 1rem;
+    }
+
+    .info-card h3 {
+      font-size: 1.13rem;
+      font-weight: 900;
+      margin-bottom: 0.7rem;
+    }
+
+    .info-card p {
+      color: var(--text-sub);
+      line-height: 1.75;
+      font-size: 0.97rem;
+    }
+
+    .result-card {
+      padding: 1.25rem 1.1rem;
+      height: 100%;
+    }
+
+    .result-number {
+      font-size: 2rem;
+      line-height: 1;
+      font-weight: 900;
+      color: var(--primary-dark);
+      margin-bottom: 0.55rem;
+      letter-spacing: -0.03em;
+    }
+
+    .result-label {
+      font-size: 0.97rem;
+      color: var(--text-sub);
+      line-height: 1.68;
+    }
+
+    .pill-title {
+      display: inline-block;
+      margin-bottom: 0.9rem;
+      padding: 6px 12px;
+      border-radius: 999px;
+      background: #eef4ff;
+      color: #1e40af;
+      font-weight: 800;
+      font-size: 0.82rem;
+      letter-spacing: 0.025em;
+      text-transform: uppercase;
+    }
+
+    .method-step {
+      border-left: 3px solid #dbeafe;
+      padding-left: 1rem;
+      margin-bottom: 1rem;
+      color: var(--text-sub);
+      line-height: 1.7;
+      font-size: 0.96rem;
+    }
+
+    .method-step strong { color: #111827; }
+
+    .quote-card {
+      padding: 1.5rem 1.4rem;
+      color: var(--text-sub);
+      line-height: 1.8;
+      font-size: 1rem;
+    }
+
+    .quote-card strong { color: var(--text-main); }
+
+    .video-card {
+      overflow: hidden;
+      height: 100%;
+    }
+
+    .video-card video {
+      width: 100%;
+      display: block;
+      background: #000;
+      aspect-ratio: 4 / 3;
+      object-fit: cover;
+    }
+
+    .video-caption {
+      padding: 0.9rem 0.9rem 1rem;
+      font-size: 0.95rem;
+      font-weight: 800;
+      color: #374151;
+      text-align: center;
+      background: #fff;
+      min-height: 54px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .curve-toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 1rem;
+    }
+
+    .curve-toolbar .input {
+      border-radius: 999px;
+      max-width: 360px;
+    }
+
+    .tag-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .tag-row .tag {
+      border-radius: 999px;
+      cursor: pointer;
+      font-weight: 700;
+      user-select: none;
+    }
+
+    .tag-row .tag.is-active {
+      background: var(--primary-dark);
+      color: white;
+    }
+
+    .curve-card {
+      overflow: hidden;
+      height: 100%;
+    }
+
+    .curve-caption {
+      font-weight: 800;
+      color: #374151;
+      text-align: center;
+      background: #fff;
+    }
+
+    .asset-note {
+      color: var(--text-light);
+      font-size: 0.92rem;
+      line-height: 1.65;
+      margin-top: 0.75rem;
+    }
+
+    .table-wrap {
+      overflow-x: auto;
+      border: 1px solid var(--card-border);
+      border-radius: 18px;
+      box-shadow: 0 10px 30px rgba(15, 23, 42, 0.04);
+      background: #fff;
+    }
+
+    table.clean-table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 740px;
+      font-size: 0.94rem;
+    }
+
+    table.clean-table th,
+    table.clean-table td {
+      padding: 0.85rem 0.9rem;
+      border-bottom: 1px solid #eef2f7;
+      text-align: center;
+    }
+
+    table.clean-table th {
+      background: #f8fafc;
+      font-weight: 900;
+      color: #111827;
+    }
+
+    table.clean-table td:first-child,
+    table.clean-table th:first-child {
+      text-align: left;
+      font-weight: 800;
+    }
+
+    table.clean-table tr:last-child td { border-bottom: none; }
+
+    .footer-simple {
+      border-top: 1px solid #eef2f7;
+      padding-top: 2rem;
+      padding-bottom: 2rem;
+      color: #6b7280;
+      text-align: center;
+      background: #fff;
+    }
+
+    .image-modal {
+      display: none;
+      position: fixed;
+      z-index: 999;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.84);
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+
+    .image-modal img {
+      max-width: 96vw;
+      max-height: 92vh;
+      border-radius: 12px;
+      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.32);
+      background: #fff;
+    }
+
+    .image-modal.is-active { display: flex; }
+
+    @media screen and (max-width: 768px) {
+      .publication-title { font-size: 2rem !important; }
+      .hero-subtitle { font-size: 1rem; }
+      .result-number { font-size: 1.65rem; }
+      .navbar-menu.is-active { display: block; }
+      .navbar-end { display: flex; flex-wrap: wrap; justify-content: center; }
+      .navbar-item { font-size: 0.9rem; }
     }
   </style>
 </head>
-<body>
 
-<section class="hero">
+<body>
+<nav class="navbar navbar-custom" role="navigation">
+  <div class="container is-max-widescreen">
+    <div class="navbar-brand">
+      <a class="navbar-item" href="#top"><strong>π<sup>ε</sup><sub>RL</sub></strong></a>
+    </div>
+    <div class="navbar-menu is-active">
+      <div class="navbar-end">
+        <a class="navbar-item" href="#overview">Overview</a>
+        <a class="navbar-item" href="#method">Method</a>
+        <a class="navbar-item" href="#results">Results</a>
+        <a class="navbar-item" href="#curves">W&amp;B Curves</a>
+        <a class="navbar-item" href="#videos">Videos</a>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<section class="hero hero-gradient" id="top">
   <div class="hero-body">
-    <div class="container is-max-desktop">
+    <div class="container is-max-widescreen">
       <div class="columns is-centered">
         <div class="column has-text-centered">
-          <h1 class="title is-1 publication-title">LatentVLA: Enhancing Long-Horizon Vision-Language-Action Models with a Latent World Model</h1>
+          <h1 class="title is-1 publication-title">
+            <span class="method-symbol">π<sup>ε</sup><sub>RL</sub></span>: Improving Flow-Matching Vision-Language-Action Models via Reinforcement Learning in Latent Noise Chunk Space
+          </h1>
+
           <div class="is-size-5 publication-authors">
             <span class="author-block">Anonymous Authors</span>
           </div>
-          
-          <!-- <div class="column has-text-centered">
-            <div class="publication-links">
-              <span class="link-block">
-                <a href="#" class="external-link button is-normal is-rounded is-dark">
-                  <span class="icon"><i class="fas fa-file-pdf"></i></span>
-                  <span>Paper</span>
-                </a>
-              </span>
-              <span class="link-block">
-                <a href="#" class="external-link button is-normal is-rounded is-dark">
-                  <span class="icon"><i class="ai ai-arxiv"></i></span>
-                  <span>arXiv</span>
-                </a>
-              </span>
-              <span class="link-block">
-                <a href="#" class="external-link button is-normal is-rounded is-dark">
-                  <span class="icon"><i class="fab fa-youtube"></i></span>
-                  <span>Video</span>
-                </a>
-              </span>
-            </div>
-          </div> -->
+
+          <p class="hero-subtitle">
+            We introduce <strong>π<sup>ε</sup><sub>RL</sub></strong>, a plug-in reinforcement learning framework for flow-matching VLA models.
+            Instead of fine-tuning the full vision-language backbone or directly exploring primitive actions, π<sup>ε</sup><sub>RL</sub>
+            freezes the pretrained VLA and learns a lightweight policy over <strong>latent noise chunks</strong>, which are decoded by the frozen flow action expert into executable action chunks.
+          </p>
+
+          <div class="badge-wrap">
+            <span class="metric-badge">Frozen VLA backbone &amp; action expert</span>
+            <span class="metric-badge green">LIBERO Long: 86.2% → 97.0%</span>
+            <span class="metric-badge purple">Meta-World H=20: 16.4% → 86.7%</span>
+            <span class="metric-badge">Real-world ALOHA: +34.0 over π<sub>0</sub></span>
+          </div>
+
+          <div class="publication-links">
+            <span class="link-block">
+              <a href="./static/pdfs/pi_epsilon_rl.pdf" class="external-link button is-dark is-rounded">
+                <span class="icon"><i class="fas fa-file-pdf"></i></span>
+                <span>Paper</span>
+              </a>
+            </span>
+            <span class="link-block">
+              <a href="#" class="external-link button is-light is-rounded" onclick="return false;">
+                <span class="icon"><i class="fab fa-github"></i></span>
+                <span>Code Coming Soon</span>
+              </a>
+            </span>
+            <span class="link-block">
+              <a href="#videos" class="external-link button is-link is-rounded">
+                <span class="icon"><i class="fas fa-play-circle"></i></span>
+                <span>Demo Videos</span>
+              </a>
+            </span>
+            <span class="link-block">
+              <a href="#curves" class="external-link button is-rounded is-light">
+                <span class="icon"><i class="fas fa-chart-line"></i></span>
+                <span>Training Curves</span>
+              </a>
+            </span>
+          </div>
         </div>
       </div>
     </div>
   </div>
 </section>
 
-<section class="section">
+<section class="section soft-section anchor-offset" id="method">
   <div class="container is-max-desktop">
-    <div class="columns is-centered has-text-centered">
-      <div class="column is-four-fifths">
-        <h2 class="title is-3">Abstract</h2>
-        <div class="content has-text-justified">
+    <h2 class="title is-3 has-text-centered section-title">Method</h2>
+    <p class="section-subtitle">
+      π<sup>ε</sup><sub>RL</sub> consists of a lightweight behavior noise policy, a frozen flow-matching decoder, and DroQC for chunk-level off-policy learning.
+    </p>
+
+    <div class="columns is-multiline">
+      <div class="column is-4">
+        <div class="info-card">
+          <div class="icon-wrap"><i class="fas fa-snowflake"></i></div>
+          <h3>Latent Noise Policy</h3>
           <p>
-            Learning an accurate world model to predict future states is fundamental for Vision-Language-Action (VLA) agents to achieve long-horizon reasoning and effective planning. 
-            However, prevailing world models predominantly operate in raw pixel space, which presents two critical challenges: (1) high-dimensional observations introduce significant task-irrelevant perceptual noise, leading to perceptual overfitting, and (2) the prohibitive computational cost of pixel-level autoregressive prediction limits the feasible modeling horizon. 
+            The fixed Gaussian prior is replaced by a trainable policy that samples latent noise chunks conditioned on the robot state.
+            These chunks serve as structured decision variables for online improvement.
           </p>
+        </div>
+      </div>
+
+      <div class="column is-4">
+        <div class="info-card">
+          <div class="icon-wrap"><i class="fas fa-lock"></i></div>
+          <h3>Frozen Flow Action Expert</h3>
           <p>
-            In this paper, we propose LatentVLA, a novel paradigm that performs world modeling in a highly compressed latent space. By leveraging a lightweight Adaptive Attention-based Pooling mechanism, we distill high-dimensional visual features into a single, semantically-rich latent world token per frame. This approach significantly reduces computational complexity, enabling the model to scale stably to long-horizon planning steps. 
-            Unlike pixel-level models, LatentVLA operates in a high-level semantic space to effectively decouple environmental dynamics from perceptual noise. Across LIBERO, Metaworld, and real-world Piper tasks, LatentVLA with lightweight LoRA fine-tuning on a  &pi;<sub>0</sub> base surpasses the significantly &pi;<sub>0.5</sub> model. This performance gap highlights the efficacy of our semantic abstraction mechanism over traditional scaling.
+            The pretrained VLA backbone and action expert remain frozen. The learned noise chunk is decoded through the original flow-matching dynamics into an executable action chunk.
           </p>
+        </div>
+      </div>
+
+      <div class="column is-4">
+        <div class="info-card">
+          <div class="icon-wrap"><i class="fas fa-layer-group"></i></div>
+          <h3>DroQC</h3>
+          <p>
+            DroQC learns chunk-level Q-values using dropout-regularized critics, enabling sample-efficient off-policy RL while evaluating complete noise chunks rather than isolated primitive actions.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div class="figure-card" style="margin-top: 1.2rem;">
+      <img src="./static/images/framework.png" alt="π epsilon RL framework" class="zoomable">
+      <div class="figure-caption">
+        <strong>Figure 2. Framework.</strong>
+        The frozen VLA encodes language, visual observations, and state. A trainable noise policy generates a latent noise chunk;
+        the frozen action expert decodes it into an action chunk; DroQC updates the noise policy with a target policy, replay buffer, and dropout critic ensemble.
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section soft-section anchor-offset" id="tasks">
+  <div class="container is-max-desktop">
+    <h2 class="title is-3 has-text-centered section-title">Selected Tasks and Coverage</h2>
+    <p class="section-subtitle">
+      We visualize the selected simulation tasks used in our experiments to show the diversity of layouts, object arrangements,
+      and manipulation patterns across both LIBERO and Meta-World.
+    </p>
+
+    <div class="figure-card">
+      <img src="./static/images/task_gallery.png" alt="Selected benchmark tasks" class="zoomable">
+      <div class="figure-caption">
+        <strong>Figure 2. Selected tasks.</strong>
+        Representative tasks used in the LIBERO and Meta-World experiments, covering different spatial layouts,
+        goals, object interactions, and manipulation skills.
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section anchor-offset" id="results">
+  <div class="container is-max-desktop">
+    <h2 class="title is-3 has-text-centered section-title">Benchmark and Real-World Results</h2>
+    <p class="section-subtitle">
+      We evaluate π<sup>ε</sup><sub>RL</sub> on LIBERO Long, Meta-World Hard/Very Hard, and real-world ALOHA bimanual manipulation tasks.
+      The results show consistent gains across chunk lengths and task families.
+    </p>
+
+    <div class="columns is-multiline">
+      <div class="column is-3">
+        <div class="result-card">
+          <div class="result-number">97.0%</div>
+          <div class="result-label">π<sub>0</sub> + π<sup>ε</sup><sub>RL</sub> average success on LIBERO Long at H=10, up from 86.2%.</div>
+        </div>
+      </div>
+      <div class="column is-3">
+        <div class="result-card">
+          <div class="result-number">98.2%</div>
+          <div class="result-label">π<sub>0.5</sub> + π<sup>ε</sup><sub>RL</sub> average success on LIBERO Long at H=10.</div>
+        </div>
+      </div>
+      <div class="column is-3">
+        <div class="result-card">
+          <div class="result-number">86.7%</div>
+          <div class="result-label">π<sub>0</sub> + π<sup>ε</sup><sub>RL</sub> on Meta-World Hard/Very Hard at H=20, up from 16.4%.</div>
+        </div>
+      </div>
+      <div class="column is-3">
+        <div class="result-card">
+          <div class="result-number">88.0%</div>
+          <div class="result-label">π<sub>0</sub> + π<sup>ε</sup><sub>RL</sub> average success on five real-world ALOHA tasks.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="columns" style="margin-top: 1rem;">
+      <div class="column is-6">
+        <div class="figure-card">
+          <img src="./static/images/libero_table.png" alt="LIBERO Long results table" class="zoomable">
+          <div class="figure-caption">
+            <strong>Table 1. LIBERO Long.</strong>
+            Success-rate comparison across noise chunk lengths H ∈ {5, 10, 15, 20}. Replace this image with the final camera-ready table crop.
+          </div>
+        </div>
+      </div>
+      <div class="column is-6">
+        <div class="figure-card">
+          <img src="./static/images/metaworld_table.png" alt="Meta-World results table" class="zoomable">
+          <div class="figure-caption">
+            <strong>Table 2. Meta-World Hard and Very Hard.</strong>
+            Success-rate comparison across representative difficult manipulation tasks.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="table-wrap" style="margin-top: 1.2rem;">
+      <table class="clean-table">
+        <thead>
+          <tr>
+            <th>Method</th>
+            <th>Grasp Banana</th>
+            <th>Open Drawer</th>
+            <th>Stacked Cube</th>
+            <th>Fold Clothes</th>
+            <th>Assemble Phone</th>
+            <th>Avg</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>π<sub>0</sub></td>
+            <td>85.0</td><td>60.0</td><td>85.0</td><td>30.0</td><td>10.0</td><td>54.0</td>
+          </tr>
+          <tr>
+            <td>π<sub>0</sub> + π<sup>ε</sup><sub>RL</sub></td>
+            <td>100.0</td><td>90.0</td><td>100.0</td><td>85.0</td><td>65.0</td><td>88.0</td>
+          </tr>
+          <tr>
+            <td>π<sub>0.5</sub></td>
+            <td>95.0</td><td>70.0</td><td>80.0</td><td>35.0</td><td>15.0</td><td>59.0</td>
+          </tr>
+          <tr>
+            <td>π<sub>0.5</sub> + π<sup>ε</sup><sub>RL</sub></td>
+            <td>100.0</td><td>95.0</td><td>100.0</td><td>80.0</td><td>50.0</td><td>85.0</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- <section class="section soft-section anchor-offset" id="curves">
+  <div class="container is-max-widescreen">
+    <h2 class="title is-3 has-text-centered section-title">W&amp;B Training Success-Rate Curves</h2>
+    <p class="section-subtitle">
+      This section is reserved for W&amp;B training logs. Export your success-rate curves as PNG/SVG files and place them under
+      <code>./static/images/wandb/</code>. The gallery below can hold many curves and supports simple keyword filtering.
+    </p>
+
+    <div class="curve-toolbar">
+      <input id="curveSearch" class="input" type="text" placeholder="Search curves, e.g., libero, metaworld, ac=10, seed">
+      <div class="tag-row" id="curveTags">
+        <span class="tag is-active" data-filter="all">All</span>
+        <span class="tag" data-filter="libero">LIBERO</span>
+        <span class="tag" data-filter="metaworld">Meta-World</span>
+        <span class="tag" data-filter="real">Real</span>
+        <span class="tag" data-filter="ablation">Ablation</span>
+      </div>
+    </div>
+
+    <div class="columns is-multiline" id="curveGrid">
+      <!-- Add or remove curve-card blocks freely. Recommended image size: 1200 x 700 or 1600 x 900. -->
+      <div class="column is-4 curve-item" data-tags="metaworld ablation ac=5 stick-pull">
+        <div class="curve-card">
+          <img src="./static/images/wandb/metaworld_stick_pull_ac5.png" alt="W&B curve: Meta-World stick-pull ac=5" class="zoomable">
+          <div class="curve-caption">Meta-World / stick-pull / AC=5</div>
+        </div>
+      </div>
+
+      <div class="column is-4 curve-item" data-tags="metaworld ablation ac=10 disassemble">
+        <div class="curve-card">
+          <img src="./static/images/wandb/metaworld_disassemble_ac10.png" alt="W&B curve: Meta-World disassemble ac=10" class="zoomable">
+          <div class="curve-caption">Meta-World / disassemble / AC=10</div>
+        </div>
+      </div>
+
+      <div class="column is-4 curve-item" data-tags="metaworld ablation ac=15 shelf-place">
+        <div class="curve-card">
+          <img src="./static/images/wandb/metaworld_shelf_place_ac15.png" alt="W&B curve: Meta-World shelf-place ac=15" class="zoomable">
+          <div class="curve-caption">Meta-World / shelf-place / AC=15</div>
+        </div>
+      </div>
+
+      <div class="column is-4 curve-item" data-tags="libero h=5 success seed">
+        <div class="curve-card">
+          <img src="./static/images/wandb/libero_h5_success.png" alt="W&B curve: LIBERO H=5 success" class="zoomable">
+          <div class="curve-caption">LIBERO Long / H=5 / Success Rate</div>
+        </div>
+      </div>
+
+      <div class="column is-4 curve-item" data-tags="libero h=10 success seed">
+        <div class="curve-card">
+          <img src="./static/images/wandb/libero_h10_success.png" alt="W&B curve: LIBERO H=10 success" class="zoomable">
+          <div class="curve-caption">LIBERO Long / H=10 / Success Rate</div>
+        </div>
+      </div>
+
+      <div class="column is-4 curve-item" data-tags="ablation chunk-length success">
+        <div class="curve-card">
+          <img src="./static/images/wandb/chunk_length_ablation.png" alt="W&B curve: chunk length ablation" class="zoomable">
+          <div class="curve-caption">Chunk Length Ablation</div>
+        </div>
+      </div>
+    </div>
+
+    <p class="asset-note">
+      To add more W&amp;B curves, copy one <code>curve-item</code> block and update: image path, caption, and <code>data-tags</code>.
+      If you export SVG from W&amp;B, simply replace <code>.png</code> with <code>.svg</code> in the image path.
+    </p>
+  </div>
+</section> -->
+
+<!-- <section class="section anchor-offset" id="videos">
+  <div class="container is-max-widescreen">
+    <h2 class="title is-3 has-text-centered section-title">Video Demonstrations</h2>
+    <p class="section-subtitle">
+      We show real-world ALOHA demonstrations, including the original real-robot videos and an additional Assemble Phone task.
+      Place all videos under <code>./static/videos/</code> and keep the filenames below, or update the source paths directly.
+    </p>
+
+    <h3 class="title is-5">Real-World ALOHA Manipulation</h3>
+    <div class="columns is-multiline">
+      <div class="column is-3">
+        <div class="video-card">
+          <video autoplay controls muted loop playsinline preload="metadata">
+            <source src="./static/videos/pumb_banana.mp4" type="video/mp4">
+          </video>
+          <div class="video-caption">Grasp Banana</div>
+        </div>
+      </div>
+
+      <div class="column is-3">
+        <div class="video-card">
+          <video autoplay controls muted loop playsinline preload="metadata">
+            <source src="./static/videos/open_drawer.mp4" type="video/mp4">
+          </video>
+          <div class="video-caption">Open Drawer</div>
+        </div>
+      </div>
+
+      <div class="column is-3">
+        <div class="video-card">
+          <video autoplay controls muted loop playsinline preload="metadata">
+            <source src="./static/videos/stacked_cube.mp4" type="video/mp4">
+          </video>
+          <div class="video-caption">Stacked Cube</div>
+        </div>
+      </div>
+
+      <div class="column is-3">
+        <div class="video-card">
+          <video autoplay controls muted loop playsinline preload="metadata">
+            <source src="./static/videos/assemble_phone.mp4" type="video/mp4">
+          </video>
+          <div class="video-caption">Assemble Phone</div>
+        </div>
+      </div>
+    </div>
+
+    <h3 class="title is-5" style="margin-top: 2rem;">Fold Clothes Variants</h3>
+    <div class="columns is-multiline">
+      <div class="column is-6">
+        <div class="video-card">
+          <video autoplay controls muted loop playsinline preload="metadata">
+            <source src="./static/videos/0401-3.mp4" type="video/mp4">
+          </video>
+          <div class="video-caption">Fold Clothes under Scene Variation</div>
+        </div>
+      </div>
+
+      <div class="column is-6">
+        <div class="video-card">
+          <video autoplay controls muted loop playsinline preload="metadata">
+            <source src="./static/videos/0401-4.mp4" type="video/mp4">
+          </video>
+          <div class="video-caption">Fold Clothes with Different Object Configuration</div>
+        </div>
+      </div>
+    </div>
+
+    <h3 class="title is-5" style="margin-top: 2rem;">Optional Simulation Videos</h3>
+    <div class="columns is-multiline">
+      <div class="column is-4">
+        <div class="video-card">
+          <video autoplay controls muted loop playsinline preload="metadata">
+            <source src="./static/videos/0401-1.mp4" type="video/mp4">
+          </video>
+          <div class="video-caption">Simulation: Grasp Banana</div>
+        </div>
+      </div>
+
+      <div class="column is-4">
+        <div class="video-card">
+          <video autoplay controls muted loop playsinline preload="metadata">
+            <source src="./static/videos/0401-2.mp4" type="video/mp4">
+          </video>
+          <div class="video-caption">Simulation: Stack Cubes</div>
+        </div>
+      </div>
+
+      <div class="column is-4">
+        <div class="video-card">
+          <video autoplay controls muted loop playsinline preload="metadata">
+            <source src="./static/videos/0401-5.mp4" type="video/mp4">
+          </video>
+          <div class="video-caption">Simulation: Put Cube into Drawer</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section> -->
+
+
+<section class="section anchor-offset" id="videos">
+  <div class="container is-max-desktop">
+    <h2 class="title is-3 has-text-centered section-title">Video Demonstrations</h2>
+    <p class="section-subtitle">
+      We show both simulation results and real-world similar-scene generalization cases.
+      The videos below illustrate that  remains effective under layout, lighting, and scene perturbations.
+    </p>
+
+    <h3 class="title is-5">Simulation Generalization</h3>
+    <div class="columns is-multiline">
+      <div class="column is-4">
+        <div class="video-card">
+          <video autoplay controls muted loop playsinline>
+            <source src="./static/videos/0401-1.mp4" type="video/mp4">
+          </video>
+          <div class="video-caption">Grasp banana</div>
+        </div>
+      </div>
+      <div class="column is-4">
+        <div class="video-card">
+          <video autoplay controls muted loop playsinline>
+            <source src="./static/videos/0401-2.mp4" type="video/mp4">
+          </video>
+          <div class="video-caption">Stack cubes</div>
+        </div>
+      </div>
+      <div class="column is-4">
+        <div class="video-card">
+          <video autoplay controls muted loop playsinline>
+            <source src="./static/videos/0401-5.mp4" type="video/mp4">
+          </video>
+          <div class="video-caption">Put cube into drawer</div>
+        </div>
+      </div>
+    </div>
+
+    <h3 class="title is-5" style="margin-top: 2rem;">Real-World Similar-Scene Generalization</h3>
+    <div class="columns is-multiline">
+      <div class="column is-4">
+        <div class="video-card">
+          <video autoplay controls muted loop playsinline>
+            <source src="./static/videos/0401-3.mp4" type="video/mp4">
+          </video>
+          <div class="video-caption">Fold clothes under scene variation</div>
+        </div>
+      </div>
+      <div class="column is-4">
+        <div class="video-card">
+          <video autoplay controls muted loop playsinline>
+            <source src="./static/videos/0401-4.mp4" type="video/mp4">
+          </video>
+          <div class="video-caption">Fold clothes with different object configuration</div>
+        </div>
+      </div>
+      <div class="column is-4">
+        <div class="video-card">
+          <video autoplay controls muted loop playsinline>
+            <source src="./static/videos/pumb_banana.mp4" type="video/mp4">
+          </video>
+          <div class="video-caption">Grasp banana with light interference</div>
         </div>
       </div>
     </div>
   </div>
 </section>
 
-<section class="hero is-light is-small">
-  <div class="hero-body">
-    <div class="container is-max-desktop">
-      <h2 class="title is-3 has-text-centered">Experimental Results</h2>
-      
-      <h3 class="title is-5 has-text-centered">Robustness Evaluation & Generalization</h3>
-      <div class="columns is-centered is-mobile is-multiline is-variable is-1">
-        
-        <div class="column is-one-fifth-desktop is-6-mobile">
-          <div class="video-container">
-            <video autoplay controls muted loop playsinline>
-              <source src="./static/videos/normal_banana.mp4" type="video/mp4">
-            </video>
-            <div class="video-caption">Grasp banana</div>
-          </div>
-        </div>
-
-        <div class="column is-one-fifth-desktop is-6-mobile">
-          <div class="video-container">
-            <video autoplay controls muted loop playsinline>
-              <source src="./static/videos/noise_banana.mp4" type="video/mp4">
-            </video>
-            <div class="video-caption">Grasp banana with noise</div>
-          </div>
-        </div>
-
-        <div class="column is-one-fifth-desktop is-6-mobile">
-          <div class="video-container">
-            <video autoplay controls muted loop playsinline>
-              <source src="./static/videos/muti_banana2.mp4" type="video/mp4">
-            </video>
-            <div class="video-caption">Repeatedly grasp banana</div>
-          </div>
-        </div>
-
-        <div class="column is-one-fifth-desktop is-6-mobile">
-          <div class="video-container">
-            <video autoplay controls muted loop playsinline>
-              <source src="./static/videos/pumb_banana.mp4" type="video/mp4">
-            </video>
-            <div class="video-caption">Grasp banana with light interference</div>
-          </div>
-        </div>
-
-        <div class="column is-one-fifth-desktop is-6-mobile">
-          <div class="video-container">
-            <video autoplay controls muted loop playsinline>
-              <source src="./static/videos/fold_clothes3.mp4" type="video/mp4">
-            </video>
-            <div class="video-caption">Fold clothes</div>
-          </div>
-        </div>
-
-      </div>
-      
+<section class="section soft-section">
+  <div class="container is-max-desktop">
+    <h2 class="title is-3 has-text-centered section-title">Method in One Paragraph</h2>
+    <div class="quote-card">
+      <p>
+        <strong>π<sup>ε</sup><sub>RL</sub></strong> adapts pretrained flow-matching VLA models by learning only in the latent noise chunk space.
+        At each chunk-level decision, a lightweight noise policy selects a latent noise chunk, which is then decoded by the frozen action expert into a temporally coherent action chunk.
+        DroQC trains this noise policy with dropout-regularized Q-functions that evaluate complete chunks, allowing sparse rewards to propagate across longer horizons while preserving the action prior of the pretrained model.
+      </p>
     </div>
   </div>
 </section>
+
+<footer class="footer-simple">
+  <div class="container is-max-desktop">
+    <p><strong>π<sup>ε</sup><sub>RL</sub></strong> — Anonymous project page for paper, results, training curves, and demo videos.</p>
+    <p style="margin-top: 0.4rem;">This page intentionally omits author names and institution identifiers for anonymous review.</p>
+  </div>
+</footer>
+
+<div class="image-modal" id="imageModal">
+  <img id="modalImage" src="" alt="Zoomed figure">
+</div>
+
+<script>
+  function openModal(src) {
+    const modal = document.getElementById('imageModal');
+    const modalImage = document.getElementById('modalImage');
+    modalImage.src = src;
+    modal.classList.add('is-active');
+  }
+
+  function closeModal() {
+    const modal = document.getElementById('imageModal');
+    const modalImage = document.getElementById('modalImage');
+    modal.classList.remove('is-active');
+    modalImage.src = '';
+  }
+
+  document.querySelectorAll('.zoomable').forEach(function (img) {
+    img.addEventListener('click', function () {
+      openModal(this.getAttribute('src'));
+    });
+  });
+
+  document.getElementById('imageModal').addEventListener('click', closeModal);
+
+  const curveSearch = document.getElementById('curveSearch');
+  const curveItems = Array.from(document.querySelectorAll('.curve-item'));
+  const tagButtons = Array.from(document.querySelectorAll('#curveTags .tag'));
+  let activeFilter = 'all';
+
+  function filterCurves() {
+    const query = (curveSearch.value || '').toLowerCase().trim();
+    curveItems.forEach(function (item) {
+      const tags = (item.getAttribute('data-tags') || '').toLowerCase();
+      const caption = (item.innerText || '').toLowerCase();
+      const matchTag = activeFilter === 'all' || tags.includes(activeFilter);
+      const matchQuery = !query || tags.includes(query) || caption.includes(query);
+      item.style.display = (matchTag && matchQuery) ? '' : 'none';
+    });
+  }
+
+  curveSearch.addEventListener('input', filterCurves);
+  tagButtons.forEach(function (tag) {
+    tag.addEventListener('click', function () {
+      tagButtons.forEach(function (t) { t.classList.remove('is-active'); });
+      this.classList.add('is-active');
+      activeFilter = this.getAttribute('data-filter');
+      filterCurves();
+    });
+  });
+</script>
 </body>
 </html>
