@@ -413,7 +413,6 @@
       <div class="navbar-end">
         <a class="navbar-item" href="#overview">Overview</a>
         <a class="navbar-item" href="#method">Method</a>
-        <a class="navbar-item" href="#tasks">Tasks</a>
         <a class="navbar-item" href="#results">Results</a>
         <a class="navbar-item" href="#curves">W&amp;B Curves</a>
         <a class="navbar-item" href="#videos">Videos</a>
@@ -480,57 +479,6 @@
   </div>
 </section>
 
-<section class="section anchor-offset" id="overview">
-  <div class="container is-max-desktop">
-    <h2 class="title is-3 has-text-centered section-title">Overview</h2>
-    <p class="section-subtitle">
-      π<sup>ε</sup><sub>RL</sub> treats the latent noise chunk as the native reinforcement learning interface of flow-matching VLA models.
-      By keeping the pretrained vision-language backbone and action expert frozen, the method preserves the original action prior while enabling online task improvement through a lightweight noise policy.
-    </p>
-
-    <div class="figure-card">
-      <img src="./static/images/overview.png" alt="π epsilon RL overview" class="zoomable">
-      <div class="figure-caption">
-        <strong>Figure 1. Overview.</strong>
-        Previous VLA adaptation methods often couple environment alignment and task learning through full-policy fine-tuning or direct action-space exploration.
-        π<sup>ε</sup><sub>RL</sub> instead performs reinforcement learning in latent noise chunk space, where selected noise chunks are decoded by the frozen flow-matching action expert into temporally coherent action chunks.
-      </div>
-    </div>
-
-    <div class="columns is-multiline" style="margin-top: 1.2rem;">
-      <div class="column is-4">
-        <div class="info-card">
-          <div class="icon-wrap"><i class="fas fa-shield-alt"></i></div>
-          <h3>Constrained Exploration</h3>
-          <p>
-            Since all behaviors are decoded by the frozen action expert, exploration remains guided by the pretrained VLA action distribution instead of drifting freely in primitive action space.
-          </p>
-        </div>
-      </div>
-
-      <div class="column is-4">
-        <div class="info-card">
-          <div class="icon-wrap"><i class="fas fa-stream"></i></div>
-          <h3>Temporal Coherence</h3>
-          <p>
-            Each latent noise chunk corresponds to a full action chunk, keeping the optimization interface aligned with the flow-matching generation process.
-          </p>
-        </div>
-      </div>
-
-      <div class="column is-4">
-        <div class="info-card">
-          <div class="icon-wrap"><i class="fas fa-bolt"></i></div>
-          <h3>Chunk-Level Credit</h3>
-          <p>
-            DroQC evaluates complete chunks and propagates sparse rewards over longer horizons, which is especially helpful for long-horizon manipulation tasks.
-          </p>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
 <section class="section soft-section anchor-offset" id="method">
   <div class="container is-max-desktop">
     <h2 class="title is-3 has-text-centered section-title">Method</h2>
@@ -582,7 +530,7 @@
   </div>
 </section>
 
-<section class="section anchor-offset" id="tasks">
+<section class="section soft-section anchor-offset" id="tasks">
   <div class="container is-max-desktop">
     <h2 class="title is-3 has-text-centered section-title">Selected Tasks and Coverage</h2>
     <p class="section-subtitle">
@@ -593,7 +541,7 @@
     <div class="figure-card">
       <img src="./static/images/task_gallery.png" alt="Selected benchmark tasks" class="zoomable">
       <div class="figure-caption">
-        <strong>Figure 3. Selected tasks.</strong>
+        <strong>Figure 2. Selected tasks.</strong>
         Representative tasks used in the LIBERO and Meta-World experiments, covering different spatial layouts,
         goals, object interactions, and manipulation skills.
       </div>
@@ -693,6 +641,7 @@
   </div>
 </section>
 
+
 <section class="section soft-section anchor-offset" id="curves">
   <div class="container is-max-widescreen">
     <h2 class="title is-3 has-text-centered section-title">W&amp;B Training Success-Rate Curves</h2>
@@ -713,71 +662,76 @@
     </div>
 
     <div class="columns is-multiline" id="curveGrid">
-      <!-- Large card for a combined AC=5/10/15/20 curve. Recommended width: 1600px or above. -->
-      <div class="column is-8 is-offset-2 curve-item" data-tags="ablation ac=5 ac=10 ac=15 ac=20 chunk-length success">
+      <!-- Add or remove curve-card blocks freely. Recommended image size: 1200 x 700 or 1600 x 900. -->
+      <!-- <div class="column is-4 curve-item" data-tags="metaworld ablation ac=5 stick-pull">
         <div class="curve-card">
-          <img src="./static/images/wandb/ac_5_10_15_20_success.png"
-               alt="W&B curve: success rate comparison for AC=5,10,15,20"
-               class="zoomable">
-          <div class="curve-caption">
-            Chunk Length Ablation: AC=5, 10, 15, and 20
-          </div>
+          <img src="./static/images/wandb/metaworld_stick_pull_ac5.png" alt="W&B curve: Meta-World stick-pull ac=5" class="zoomable">
+          <div class="curve-caption">Meta-World / stick-pull / AC=5</div>
+        </div>
+      </div> -->
+
+      <!-- <div class="column is-4 curve-item" data-tags="metaworld ablation ac=10 disassemble">
+        <div class="curve-card">
+          <img src="./static/images/wandb/metaworld_disassemble_ac10.png" alt="W&B curve: Meta-World disassemble ac=10" class="zoomable">
+          <div class="curve-caption">Meta-World / disassemble / AC=10</div>
+        </div>
+      </div> -->
+
+      
+      <div class="column is-4 curve-item" data-tags="libero h=5 success seed">
+        <div class="curve-card">
+          <img src="./static/images/wandb/libero10_2.png" alt="W&B curve: LIBERO H=5 success" class="zoomable">
+          <div class="curve-caption">LIBERO Long  Task 2 Success Rate</div>
         </div>
       </div>
 
-      <div class="column is-4 curve-item" data-tags="libero success task-2">
+      
+      <div class="column is-4 curve-item" data-tags="libero h=5 success seed">
         <div class="curve-card">
-          <img src="./static/images/wandb/libero10_2.png" alt="W&B curve: LIBERO Task 2 success" class="zoomable">
-          <div class="curve-caption">LIBERO Long Task 2 Success Rate</div>
+          <img src="./static/images/wandb/libero10_3.png" alt="W&B curve: LIBERO H=5 success" class="zoomable">
+          <div class="curve-caption">LIBERO Long  Task 3 Success Rate</div>
         </div>
       </div>
 
-      <div class="column is-4 curve-item" data-tags="libero success task-3">
+      <div class="column is-4 curve-item" data-tags="libero h=5 success seed">
         <div class="curve-card">
-          <img src="./static/images/wandb/libero10_3.png" alt="W&B curve: LIBERO Task 3 success" class="zoomable">
-          <div class="curve-caption">LIBERO Long Task 3 Success Rate</div>
+          <img src="./static/images/wandb/libero10_4.png" alt="W&B curve: LIBERO H=5 success" class="zoomable">
+          <div class="curve-caption">LIBERO Long  Task 4  Success Rate</div>
         </div>
       </div>
 
-      <div class="column is-4 curve-item" data-tags="libero success task-4">
+      <div class="column is-4 curve-item" data-tags="libero h=5 success seed">
         <div class="curve-card">
-          <img src="./static/images/wandb/libero10_4.png" alt="W&B curve: LIBERO Task 4 success" class="zoomable">
-          <div class="curve-caption">LIBERO Long Task 4 Success Rate</div>
+          <img src="./static/images/wandb/libero10_5.png" alt="W&B curve: LIBERO H=5 success" class="zoomable">
+          <div class="curve-caption">LIBERO Long  Task 5  Success Rate</div>
         </div>
       </div>
 
-      <div class="column is-4 curve-item" data-tags="libero success task-5">
+      <div class="column is-4 curve-item" data-tags="libero h=5 success seed">
         <div class="curve-card">
-          <img src="./static/images/wandb/libero10_5.png" alt="W&B curve: LIBERO Task 5 success" class="zoomable">
-          <div class="curve-caption">LIBERO Long Task 5 Success Rate</div>
+          <img src="./static/images/wandb/libero10_6.png" alt="W&B curve: LIBERO H=5 success" class="zoomable">
+          <div class="curve-caption">LIBERO Long  Task 6  Success Rate</div>
         </div>
       </div>
 
-      <div class="column is-4 curve-item" data-tags="libero success task-6">
+      <div class="column is-4 curve-item" data-tags="libero h=5 success seed">
         <div class="curve-card">
-          <img src="./static/images/wandb/libero10_6.png" alt="W&B curve: LIBERO Task 6 success" class="zoomable">
-          <div class="curve-caption">LIBERO Long Task 6 Success Rate</div>
+          <img src="./static/images/wandb/libero10_9.png" alt="W&B curve: LIBERO H=5 success" class="zoomable">
+          <div class="curve-caption">LIBERO Long  Task 9  Success Rate</div>
         </div>
       </div>
 
-      <div class="column is-4 curve-item" data-tags="libero success task-9">
+      <div class="column is-4 curve-item" data-tags="libero h=5 success seed">
         <div class="curve-card">
-          <img src="./static/images/wandb/libero10_9.png" alt="W&B curve: LIBERO Task 9 success" class="zoomable">
-          <div class="curve-caption">LIBERO Long Task 9 Success Rate</div>
+          <img src="./static/images/wandb/libero10_8.png" alt="W&B curve: LIBERO H=5 success" class="zoomable">
+          <div class="curve-caption">LIBERO Long  Task 8  Success Rate</div>
         </div>
       </div>
 
-      <div class="column is-4 curve-item" data-tags="libero success task-8">
+      <div class="column is-4 curve-item" data-tags="libero h=10 success seed">
         <div class="curve-card">
-          <img src="./static/images/wandb/libero10_8.png" alt="W&B curve: LIBERO Task 8 success" class="zoomable">
-          <div class="curve-caption">LIBERO Long Task 8 Success Rate</div>
-        </div>
-      </div>
-
-      <div class="column is-4 curve-item" data-tags="libero success task-8 train-1m">
-        <div class="curve-card">
-          <img src="./static/images/wandb/libero_h10_success.png" alt="W&B curve: LIBERO Task 8 1M training success" class="zoomable">
-          <div class="curve-caption">LIBERO Long Task 8 (Train for 1M) Success Rate</div>
+          <img src="./static/images/wandb/libero_h10_success.png" alt="W&B curve: LIBERO H=10 success" class="zoomable">
+          <div class="curve-caption">LIBERO Long  Task8(Train for 1M)  Success Rate</div>
         </div>
       </div>
 
@@ -796,12 +750,13 @@
   </div>
 </section>
 
+
 <section class="section anchor-offset" id="videos">
   <div class="container is-max-desktop">
     <h2 class="title is-3 has-text-centered section-title">Video Demonstrations</h2>
     <p class="section-subtitle">
       We show both simulation results and real-world similar-scene generalization cases.
-      The videos below illustrate that π<sup>ε</sup><sub>RL</sub> remains effective under layout, lighting, and scene perturbations.
+      The videos below illustrate that  remains effective under layout, lighting, and scene perturbations.
     </p>
 
     <h3 class="title is-5">Simulation Generalization</h3>
@@ -814,7 +769,6 @@
           <div class="video-caption">Grasp banana</div>
         </div>
       </div>
-
       <div class="column is-4">
         <div class="video-card">
           <video autoplay controls muted loop playsinline>
@@ -823,7 +777,6 @@
           <div class="video-caption">Picking bananas under light interference</div>
         </div>
       </div>
-
       <div class="column is-4">
         <div class="video-card">
           <video autoplay controls muted loop playsinline>
@@ -844,7 +797,6 @@
           <div class="video-caption">Fold Clothes</div>
         </div>
       </div>
-
       <div class="column is-4">
         <div class="video-card">
           <video autoplay controls muted loop playsinline>
@@ -853,22 +805,12 @@
           <div class="video-caption">Grabbing bananas under object interference</div>
         </div>
       </div>
-
       <div class="column is-4">
         <div class="video-card">
           <video autoplay controls muted loop playsinline>
             <source src="./static/videos/muti_banana.mp4" type="video/mp4">
           </video>
           <div class="video-caption">Automatically grabbing bananas multiple times</div>
-        </div>
-      </div>
-
-      <div class="column is-4">
-        <div class="video-card">
-          <video autoplay controls muted loop playsinline>
-            <source src="./static/videos/assemble_phone.mp4" type="video/mp4">
-          </video>
-          <div class="video-caption">Assemble Phone</div>
         </div>
       </div>
     </div>
@@ -939,7 +881,6 @@
   }
 
   curveSearch.addEventListener('input', filterCurves);
-
   tagButtons.forEach(function (tag) {
     tag.addEventListener('click', function () {
       tagButtons.forEach(function (t) { t.classList.remove('is-active'); });
