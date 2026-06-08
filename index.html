@@ -697,8 +697,7 @@
   <div class="container is-max-widescreen">
     <h2 class="title is-3 has-text-centered section-title">W&amp;B Training Success-Rate Curves</h2>
     <p class="section-subtitle">
-      This section is reserved for W&amp;B training logs. Export your success-rate curves as PNG/SVG files and place them under
-      <code>./static/images/wandb/</code>. The gallery below can hold many curves and supports simple keyword filtering.
+      This section is reserved for W&amp;B training logs. Export your success-rate curves as PNG/SVG files. The gallery below can hold many curves and supports simple keyword filtering.
     </p>
 
     <div class="curve-toolbar">
@@ -776,23 +775,23 @@
 
       <div class="column is-4 curve-item" data-tags="libero success task-8 train-1m">
         <div class="curve-card">
-          <img src="./static/images/wandb/libero_h10_success.png" alt="W&B curve: LIBERO Task 8 1M training success" class="zoomable">
+          <img src="./static/images/wandb/libero10_8_1M.png" alt="W&B curve: LIBERO Task 8 1M training success" class="zoomable">
           <div class="curve-caption">LIBERO Long Task 8 (Train for 1M) Success Rate</div>
         </div>
       </div>
 
       <div class="column is-4 curve-item" data-tags="ablation chunk-length success">
         <div class="curve-card">
-          <img src="./static/images/wandb/chunk_length_ablation.png" alt="W&B curve: chunk length ablation" class="zoomable">
-          <div class="curve-caption">Chunk Length Ablation</div>
+          <img src="./static/images/wandb/libero10_8_abla.png" alt="W&B curve: chunk length ablation" class="zoomable">
+          <div class="curve-caption">libero10 Task 8 Ablation from sft 15k of pi0</div>
         </div>
       </div>
     </div>
 
-    <p class="asset-note">
+    <!-- <p class="asset-note">
       To add more W&amp;B curves, copy one <code>curve-item</code> block and update: image path, caption, and <code>data-tags</code>.
       If you export SVG from W&amp;B, simply replace <code>.png</code> with <code>.svg</code> in the image path.
-    </p>
+    </p> -->
   </div>
 </section>
 
